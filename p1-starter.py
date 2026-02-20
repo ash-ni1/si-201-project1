@@ -143,11 +143,14 @@ def calc_2(penguins_list):
 
     return counts
 
-def write_output():
+def write_output(calc_1_output, calc_2_output):
     '''
     Writes output of calc_1 and calc_2 into a .txt file
     '''
-    pass
+    # Open and write txt file, use 'with open' for automatic close
+    with open('output.txt', mode='w') as file:
+        file.write(f"Calculation 1 Output:\n{calc_1_output}\n\n")
+        file.write(f"Calculation 2 Output:\n{calc_2_output}\n")
 
 
 # Testing
@@ -209,8 +212,9 @@ class TestCalc(unittest.TestCase):
 
 def main():
     penguins_list = read_input('penguins.csv')
-    body_mass_avgs = calc_1(penguins_list)
-    island_sex_count = calc_2(penguins_list)
+    calc_1_out = calc_1(penguins_list)
+    calc_2_out = calc_2(penguins_list)
+    write_output(calc_1_out, calc_2_out)
     unittest.main()
 
 if __name__ == '__main__':

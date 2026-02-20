@@ -1,0 +1,5 @@
+Calculation 1 Output:
+{'Adelie': 4316.666666666667, 'Gentoo': 5173.5, 'Chinstrap': 3775.0}
+
+Calculation 2 Output:
+{'Dream': {'female': 2, 'male': 20}, 'Biscoe': {'male': 62, 'female': 58}, 'Torgersen': {'male': 2}}

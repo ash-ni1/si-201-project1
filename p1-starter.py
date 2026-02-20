@@ -11,8 +11,53 @@
 import csv
 import unittest
 
-def read_input(file):
-    pass
+def read_input(csv_file):
+    penguins_list = []
+    
+    # Open and read csv file, use 'with open' for automatic close
+    with open(csv_file, mode='r', newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        headers = next(reader)
+
+        # Get keys for individual dictionaries of penguins
+        key_sp = headers[1]
+        key_is = headers[2]
+        key_bl = headers[3]
+        key_bd = headers[4]
+        key_fl = headers[5]
+        key_bm = headers[6]
+        key_sx = headers[7]
+        key_yr = headers[8]
+
+        for row in reader:
+            # Empty dictionary for single penguin object  
+            penguin = {}      
+
+            # Get each individual value
+            species = row[1]
+            island = row[2]
+            # Account for 'NA' value in the dataset, set None if value equals 'NA' else get true value
+            bill_length = None if row[3] == 'NA' else float(row[3])
+            bill_depth = None if row[4] == 'NA' else float(row[4])
+            flipper_length = None if row[5] == 'NA' else int(row[5])
+            body_mass = None if row[6] == 'NA' else int(row[6])
+            sex = None if row[7] == 'NA' else row[7]
+            year = int(row[8])
+
+            # Insert value into dictionary
+            penguin[key_sp] = species
+            penguin[key_is] = island
+            penguin[key_bl] = bill_length
+            penguin[key_bd] = bill_depth
+            penguin[key_fl] = flipper_length
+            penguin[key_bm] = body_mass
+            penguin[key_sx] = sex
+            penguin[key_yr] = year
+
+            # Add penguin to list
+            penguins_list.append(penguin)
+
+    return penguins_list
 
 # Calculation 1:
 # For each species, what is the average body mass of penguins that have a bill length greater than 45 mm?
@@ -84,5 +129,9 @@ class TestCalc(unittest.TestCase):
         self.assertEqual(count_dict["Biscoe"]["female"], 2)
 
 
+def main():
+    penguins_list = read_input('penguins.csv')
+    # unittest.main()
+
 if __name__ == '__main__':
-    unittest.main()
+    main()

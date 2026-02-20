@@ -8,6 +8,7 @@
 # Did your use of GenAI on this assignment align with your goals and guidelines in
 # your Gen AI contract? If not, why?
 
+import csv
 import unittest
 
 def read_input(file):
@@ -33,7 +34,7 @@ def write_output():
 class TestCalc(unittest.TestCase):
     def setUp(self):
         # read in subset dataset to list of dictionaries
-        self.penguins_list = read_input("penguins_subset.csv")
+        self.penguins_list = read_input('penguins_subset.csv')
 
     def test_calc1(self):
         avg_dict = calc_1(self.penguins_list)
@@ -45,6 +46,7 @@ class TestCalc(unittest.TestCase):
         update_penguins_list = []
 
         # Removing the only qualifying Gentoo penguin for calc 1 from the list
+            # Other Gentoo penguins are less than or equal 45 mm bill length (not greater)
         for penguin in self.penguins_list:
             if not (penguin["species"] == "Gentoo" and penguin["bill_length_mm"] > 45):
                 update_penguins_list.append(penguin)
@@ -56,28 +58,30 @@ class TestCalc(unittest.TestCase):
 
     def test_calc2(self):
         count_dict = calc_2(self.penguins_list)
-        self.assertEqual(count_dict["Torgersen"]["M"], 0)
-        self.assertEqual(count_dict["Torgersen"]["F"], 0)
-        self.assertEqual(count_dict["Dream"]["M"], 1)
-        self.assertEqual(count_dict["Dream"]["F"], 0)
-        self.assertEqual(count_dict["Biscoe"]["M"], 1)
-        self.assertEqual(count_dict["Biscoe"]["F"], 2)
+        self.assertEqual(count_dict["Torgersen"]["male"], 0)
+        self.assertEqual(count_dict["Torgersen"]["female"], 0)
+        self.assertEqual(count_dict["Dream"]["male"], 1)
+        self.assertEqual(count_dict["Dream"]["female"], 0)
+        self.assertEqual(count_dict["Biscoe"]["male"], 1)
+        self.assertEqual(count_dict["Biscoe"]["female"], 2)
 
     def test_calc2_edge(self):
         update_penguins_list = []
 
         # Removing the only male penguin on Biscoe for calc 2 from the list
+            # Other male penguin on Biscoe has exactly 200 mm flipper length (not greater)
+            # Other pengions on Biscoe are 2 females and 1 NA
         for penguin in self.penguins_list:
             if not (penguin["island"] == "Biscoe" and penguin["flipper_length_mm"] > 200):
                 update_penguins_list.append(penguin)
 
         count_dict = calc_2(update_penguins_list)
-        self.assertEqual(count_dict["Torgersen"]["M"], 0)
-        self.assertEqual(count_dict["Torgersen"]["F"], 0)
-        self.assertEqual(count_dict["Dream"]["M"], 1)
-        self.assertEqual(count_dict["Dream"]["F"], 0)
-        self.assertEqual(count_dict["Biscoe"]["M"], 0)  # Count should be 0 since no male penguins qualify
-        self.assertEqual(count_dict["Biscoe"]["F"], 2)
+        self.assertEqual(count_dict["Torgersen"]["male"], 0)
+        self.assertEqual(count_dict["Torgersen"]["female"], 0)
+        self.assertEqual(count_dict["Dream"]["male"], 1)
+        self.assertEqual(count_dict["Dream"]["female"], 0)
+        self.assertEqual(count_dict["Biscoe"]["male"], 0)  # Count should be 0 since no male penguins qualify
+        self.assertEqual(count_dict["Biscoe"]["female"], 2)
 
 
 if __name__ == '__main__':

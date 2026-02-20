@@ -12,6 +12,9 @@ import csv
 import unittest
 
 def read_input(csv_file):
+    '''
+    Reads input .csv file into a list of dictionaries
+    '''
     penguins_list = []
     
     # Open and read csv file, use 'with open' for automatic close
@@ -59,19 +62,65 @@ def read_input(csv_file):
 
     return penguins_list
 
-# Calculation 1:
-# For each species, what is the average body mass of penguins that have a bill length greater than 45 mm?
-# Columns used: species, body_mass_g, bill_length_mm
 def calc_1(penguins_list):
-    pass
+    '''
+    For each species, calculates the average body mass of penguins that have a bill length greater than 45 mm
+    Columns used: species, body_mass_g, bill_length_mm
+    '''
+    averages = {}
 
-# Calculation 2:
-# How many penguins are there for each sex on each island that have a flipper length greater than 200 mm?
-# Columns used: sex, island, flipper_length_mm
+    # Keep track of the sum and count for each species
+    adelie_sum = 0
+    a_count = 0
+    gentoo_sum = 0
+    g_count = 0
+    chinstrap_sum = 0
+    c_count = 0
+
+    # Loop through each penguin
+        # 1) Get the bill length of the penguin and check if bill length is None
+            # 1.5) If true, continue to next penguin
+        # 2) Check if the bill length is greater than 45 mm
+        # 3) If true, get the species and body_mass of the penguin
+            # 3.5) If body_mass is None, continue to next penguin
+        # 4) Filter by species using if/elif, add to respective sum and count
+    for penguin in penguins_list:
+        bill_length = penguin["bill_length_mm"]
+        if bill_length is None:
+            continue
+        elif bill_length > 45:
+            species = penguin["species"]
+            body_mass = penguin["body_mass_g"]
+            if body_mass is None:
+                continue
+            if species == 'Adelie':
+                adelie_sum += body_mass
+                a_count += 1
+            elif species == 'Gentoo':
+                gentoo_sum += body_mass
+                g_count += 1
+            elif species == "Chinstrap":
+                chinstrap_sum += body_mass
+                c_count += 1
+
+    # Calculate the averages, prevent divide by 0 by checking count value
+    averages["Adelie"] = 0 if a_count == 0 else adelie_sum / a_count
+    averages["Gentoo"] = 0 if g_count == 0 else gentoo_sum / g_count
+    averages["Chinstrap"] = 0 if c_count == 0 else chinstrap_sum / c_count
+
+    return averages
+
 def calc_2(penguins_list):
+    '''
+    Calculates how many penguins there are for each sex on each island that have a flipper length greater than 200 mm
+    Columns used: sex, island, flipper_length_mm
+    '''
     pass
 
 def write_output():
+    '''
+    Writes output of calc_1 and calc_2 into a .txt file
+    '''
     pass
 
 
@@ -84,8 +133,8 @@ class TestCalc(unittest.TestCase):
     def test_calc1(self):
         avg_dict = calc_1(self.penguins_list)
         self.assertEqual(avg_dict["Adelie"], 4175)
-        self.assertEqual(avg_dict["Gentoo"], 4850)
         self.assertEqual(avg_dict["Chinstrap"], 3475)
+        self.assertEqual(avg_dict["Gentoo"], 4850)
 
     def test_calc1_edge(self):
         update_penguins_list = []
@@ -99,7 +148,7 @@ class TestCalc(unittest.TestCase):
         avg_dict = calc_1(update_penguins_list)
         self.assertEqual(avg_dict["Adelie"], 4175)
         self.assertEqual(avg_dict["Chinstrap"], 3475)
-        self.assertNotIn("Gentoo", avg_dict)    # Gentoo should not exist since no penguins qualify
+        self.assertNotIn(avg_dict["Gentoo"], 0)    # Gentoo should average 0 since no penguins qualify
 
     def test_calc2(self):
         count_dict = calc_2(self.penguins_list)
@@ -131,6 +180,7 @@ class TestCalc(unittest.TestCase):
 
 def main():
     penguins_list = read_input('penguins.csv')
+    body_mass_avgs = calc_1(penguins_list)
     # unittest.main()
 
 if __name__ == '__main__':

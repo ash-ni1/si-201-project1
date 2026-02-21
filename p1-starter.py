@@ -111,6 +111,7 @@ def calc_1(penguins_list):
     averages["Gentoo"] = 0 if g_count == 0 else gentoo_sum / g_count
     averages["Chinstrap"] = 0 if c_count == 0 else chinstrap_sum / c_count
 
+    write_output(averages, 1)
     return averages
 
 def calc_2(penguins_list):
@@ -142,21 +143,23 @@ def calc_2(penguins_list):
             s_dict[sex] = s_dict.get(sex, 0) + 1
             counts[island] = s_dict
 
+    write_output(counts, 2)
     return counts
 
-def write_output(calc_1_output, calc_2_output):
+def write_output(output, num):
     '''
-    Writes output of calc_1 and calc_2 into a .txt file
+    Writes output of a calculation into a .txt file
     '''
     # Open and write txt file, use 'with open' for automatic close
-    with open('output.txt', mode='w') as file:
-        file.write(f"Calculation 1 Output:\n{calc_1_output}\n\n")
-        file.write(f"Calculation 2 Output:\n{calc_2_output}\n")
+    # Mode a to append to file instead of overwritting
+    with open('output.txt', mode='a') as file:
+        file.write(f"Calculation {num} Output:\n{output}\n\n")
 
 
 # Testing
 class TestCalc(unittest.TestCase):
     def setUp(self):
+        open('output.txt', 'w').close() # clear output file at start of run
         # read in subset dataset to list of dictionaries
         self.penguins_list = read_input('penguins_subset.csv')
 
@@ -212,11 +215,12 @@ class TestCalc(unittest.TestCase):
 
 
 def main():
+    open('output.txt', 'w').close() # clear output file at start of run
     penguins_list = read_input('penguins.csv')
-    calc_1_out = calc_1(penguins_list)
-    calc_2_out = calc_2(penguins_list)
-    write_output(calc_1_out, calc_2_out)
-    unittest.main()
+    calc_1(penguins_list)
+    calc_2(penguins_list)
+    
+    # unittest.main()
 
 if __name__ == '__main__':
     main()
